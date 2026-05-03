@@ -15,8 +15,8 @@ function App() {
       {/* Navigation */}
       <Navbar />
       
-      {/* Hero Section */}
-      <section id="home">
+      {/* Hero Section - Added top padding to account for fixed navbar */}
+      <section id="home" className="pt-20 lg:pt-24">
         <Hero />
       </section>
       
