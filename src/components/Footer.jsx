@@ -14,7 +14,6 @@ const Footer = () => {
     { name: 'Our Menu', href: '#menu' },
     { name: 'Banquet Hall', href: '#banquet' },
     { name: 'Gallery', href: '#gallery' },
-    { name: 'Testimonials', href: '#testimonials' },
     { name: 'Contact', href: '#contact' }
   ];
 
@@ -54,239 +53,252 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-[#0A0A0A] border-t border-white/5 overflow-hidden">
+    <footer className="relative bg-[#0A0A0A] overflow-hidden">
       
-      {/* Background Fire Glow Effects */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-radial from-[#FF6A00]/10 to-transparent 
-                      rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-radial from-[#FFB347]/10 to-transparent 
-                      rounded-full blur-3xl" />
+      {/* CTA Banner Section */}
+      <div className="relative bg-gradient-to-r from-[#FF6A00] to-[#FFB347] py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center space-y-6">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black">
+              Ready for an Extraordinary Experience?
+            </h2>
+            <p className="text-black/80 max-w-2xl mx-auto text-sm sm:text-base">
+              Whether it's a romantic dinner, family celebration, or corporate event, 
+              Floris Restaurant & Banquet is your destination for exceptional moments.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <a 
+                href="tel:+919876543210"
+                className="px-8 py-4 bg-black text-white font-bold rounded-full
+                         hover:bg-black/90 transition-all duration-300
+                         shadow-[0_0_25px_rgba(0,0,0,0.3)]
+                         hover:scale-105"
+              >
+                Call: +91 98765 43210
+              </a>
+              <a 
+                href="#menu"
+                className="px-8 py-4 bg-white text-black font-bold rounded-full
+                         hover:bg-white/90 transition-all duration-300
+                         hover:scale-105"
+              >
+                View Menu
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
-        
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 pb-12 border-b border-white/10">
+      {/* Background Effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-radial from-[#FF6A00]/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-radial from-[#FFB347]/5 to-transparent rounded-full blur-3xl" />
+      </div>
+
+      {/* Main Footer Content */}
+      <div className="relative z-10 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
           
-          {/* Column 1 - About */}
-          <div className="space-y-6">
-            <div className="space-y-3">
-              {/* Logo */}
-              <div className="relative inline-block">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#FF6A00] to-[#FFB347] blur-xl opacity-40" />
-                <h2 className="relative text-3xl font-bold bg-gradient-to-r from-[#FF6A00] to-[#FFB347] 
-                             bg-clip-text text-transparent">
-                  FLORIS
-                </h2>
-              </div>
-              <p className="text-[#A1A1AA] text-sm tracking-wider uppercase">
-                Restaurant & Banquet
-              </p>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-white/10">
             
-            <p className="text-[#A1A1AA] leading-relaxed text-sm">
-              Experience premium dining with aesthetic lighting, signature mojitos, 
-              and exquisite cuisine at Patan's finest restaurant and banquet venue.
-            </p>
-
-            {/* Social Links */}
-            <div className="flex gap-3">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href="#"
-                  className="group w-10 h-10 rounded-full bg-white/5 border border-white/10
-                           hover:bg-gradient-to-r hover:from-[#FF6A00] hover:to-[#FFB347]
-                           hover:border-transparent
-                           flex items-center justify-center
-                           transition-all duration-500
-                           hover:shadow-[0_0_20px_rgba(255,106,0,0.5)]"
-                  aria-label={social.name}
-                >
-                  <span className="text-[#A1A1AA] group-hover:text-black transition-colors duration-300">
-                    {social.icon}
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Column 2 - Quick Links */}
-          <div className="space-y-6">
-            <h3 className="text-white font-bold text-lg relative inline-block">
-              Quick Links
-              <span className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-[#FF6A00] to-[#FFB347]" />
-            </h3>
-            
-            <ul className="space-y-3">
-              {quickLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="group flex items-center gap-2 text-[#A1A1AA] hover:text-[#FFB347] 
-                             transition-colors duration-300"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF6A00] opacity-0 
-                                   group-hover:opacity-100 transition-opacity duration-300" />
-                    <span className="text-sm">{link.name}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 3 - Menu Categories */}
-          <div className="space-y-6">
-            <h3 className="text-white font-bold text-lg relative inline-block">
-              Our Menu
-              <span className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-[#FF6A00] to-[#FFB347]" />
-            </h3>
-            
-            <div className="space-y-3">
-              {menuCategories.map((category, index) => (
-                <div
-                  key={index}
-                  className="group flex items-center gap-3 px-4 py-2.5 rounded-lg
-                           bg-white/5 border border-white/10
-                           hover:bg-white/10 hover:border-[#FF6A00]/30
-                           transition-all duration-300 cursor-pointer"
-                >
-                  <span className="text-xl">{category.icon}</span>
-                  <span className="text-sm text-[#A1A1AA] group-hover:text-[#FFB347] 
-                               transition-colors duration-300">
-                    {category.name}
-                  </span>
+            {/* Column 1 - About */}
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <div className="relative inline-block">
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#FF6A00] to-[#FFB347] blur-xl opacity-40" />
+                  <h2 className="relative text-3xl font-bold bg-gradient-to-r from-[#FF6A00] to-[#FFB347] bg-clip-text text-transparent">
+                    FLORIS
+                  </h2>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Column 4 - Contact Info */}
-          <div className="space-y-6">
-            <h3 className="text-white font-bold text-lg relative inline-block">
-              Contact Us
-              <span className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-[#FF6A00] to-[#FFB347]" />
-            </h3>
-            
-            <div className="space-y-4">
+                <p className="text-[#A1A1AA] text-sm tracking-wider uppercase">
+                  Restaurant & Banquet
+                </p>
+              </div>
               
-              {/* Location */}
-              <div className="flex gap-3">
-                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-r from-[#FF6A00] to-[#FFB347]
-                              flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.3)]">
-                  <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-white font-medium text-sm mb-1">Address</p>
-                  <p className="text-[#A1A1AA] text-sm leading-relaxed">
-                    1st Floor, Mashruwala Complex<br />
-                    Opp. New Circuit House<br />
-                    Patan-Chanasma Highway, Patan
-                  </p>
-                </div>
-              </div>
-
-              {/* Phone */}
-              <div className="flex gap-3">
-                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-r from-[#FF6A00] to-[#FFB347]
-                              flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.3)]">
-                  <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-white font-medium text-sm mb-1">Phone</p>
-                  <a href="tel:+919876543210" 
-                     className="text-[#A1A1AA] hover:text-[#FFB347] text-sm transition-colors duration-300">
-                    +91 98765 43210
-                  </a>
-                </div>
-              </div>
-
-              {/* Hours */}
-              <div className="flex gap-3">
-                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-r from-[#FF6A00] to-[#FFB347]
-                              flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.3)]">
-                  <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-white font-medium text-sm mb-1">Hours</p>
-                  <p className="text-[#A1A1AA] text-sm">
-                    Open 24/7<br />
-                    <span className="text-xs">Banquet by appointment</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Newsletter Subscription */}
-        <div className="py-12 border-b border-white/10">
-          <div className="max-w-2xl mx-auto text-center space-y-6">
-            <div className="space-y-2">
-              <h3 className="text-2xl lg:text-3xl font-bold text-white">
-                Join Our <span className="bg-gradient-to-r from-[#FF6A00] to-[#FFB347] 
-                                        bg-clip-text text-transparent">Fire Club</span>
-              </h3>
-              <p className="text-[#A1A1AA]">
-                Get exclusive offers, menu updates, and special event invitations
+              <p className="text-[#A1A1AA] leading-relaxed text-sm">
+                Experience premium dining with aesthetic lighting, signature mojitos, 
+                and exquisite cuisine at Patan's finest restaurant and banquet venue.
               </p>
+
+              <div className="flex gap-3">
+                {socialLinks.map((social, index) => (
+                  <a
+                    key={index}
+                    href="#"
+                    className="group w-10 h-10 rounded-full bg-white/5 border border-white/10
+                             hover:bg-gradient-to-r hover:from-[#FF6A00] hover:to-[#FFB347]
+                             hover:border-transparent flex items-center justify-center
+                             transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,106,0,0.5)]"
+                    aria-label={social.name}
+                  >
+                    <span className="text-[#A1A1AA] group-hover:text-black transition-colors">
+                      {social.icon}
+                    </span>
+                  </a>
+                ))}
+              </div>
             </div>
 
-            <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-6 py-4 bg-white/5 border border-white/10 rounded-full
-                         text-white placeholder-[#6B7280]
-                         focus:outline-none focus:border-[#FF6A00]/50 focus:bg-white/10
-                         transition-all duration-300"
-              />
-              <button
-                type="submit"
-                className="px-8 py-4 bg-gradient-to-r from-[#FF6A00] to-[#FFB347]
-                         text-black font-bold rounded-full
-                         hover:scale-105 active:scale-95
-                         transition-all duration-300
-                         shadow-[0_0_25px_rgba(255,106,0,0.4)]
-                         hover:shadow-[0_0_40px_rgba(255,106,0,0.6)]
-                         whitespace-nowrap"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
+            {/* Column 2 - Quick Links */}
+            <div className="space-y-6">
+              <h3 className="text-white font-bold text-lg relative inline-block pb-3">
+                Quick Links
+                <span className="absolute bottom-0 left-0 w-12 h-0.5 bg-gradient-to-r from-[#FF6A00] to-[#FFB347]" />
+              </h3>
+              
+              <ul className="space-y-3">
+                {quickLinks.map((link, index) => (
+                  <li key={index}>
+                    <a
+                      href={link.href}
+                      className="group flex items-center gap-2 text-[#A1A1AA] hover:text-[#FFB347] transition-colors duration-300"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF6A00] opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <span className="text-sm">{link.name}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[#6B7280] text-sm text-center md:text-left">
-            © 2024 Floris Restaurant & Banquet. All rights reserved.
-          </p>
-          
-          <div className="flex flex-wrap justify-center gap-6 text-sm">
-            <a href="#" className="text-[#A1A1AA] hover:text-[#FFB347] transition-colors duration-300">
-              Privacy Policy
-            </a>
-            <span className="text-white/10">|</span>
-            <a href="#" className="text-[#A1A1AA] hover:text-[#FFB347] transition-colors duration-300">
-              Terms of Service
-            </a>
-            <span className="text-white/10">|</span>
-            <a href="#" className="text-[#A1A1AA] hover:text-[#FFB347] transition-colors duration-300">
-              Cookie Policy
-            </a>
+            {/* Column 3 - Menu Categories */}
+            <div className="space-y-6">
+              <h3 className="text-white font-bold text-lg relative inline-block pb-3">
+                Our Menu
+                <span className="absolute bottom-0 left-0 w-12 h-0.5 bg-gradient-to-r from-[#FF6A00] to-[#FFB347]" />
+              </h3>
+              
+              <div className="space-y-3">
+                {menuCategories.map((category, index) => (
+                  <div
+                    key={index}
+                    className="group flex items-center gap-3 px-4 py-2.5 rounded-lg bg-white/5 border border-white/10
+                             hover:bg-white/10 hover:border-[#FF6A00]/30 transition-all duration-300 cursor-pointer"
+                  >
+                    <span className="text-xl">{category.icon}</span>
+                    <span className="text-sm text-[#A1A1AA] group-hover:text-[#FFB347] transition-colors">
+                      {category.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Column 4 - Contact Info */}
+            <div className="space-y-6">
+              <h3 className="text-white font-bold text-lg relative inline-block pb-3">
+                Contact Us
+                <span className="absolute bottom-0 left-0 w-12 h-0.5 bg-gradient-to-r from-[#FF6A00] to-[#FFB347]" />
+              </h3>
+              
+              <div className="space-y-4">
+                
+                {/* Location */}
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-r from-[#FF6A00] to-[#FFB347]
+                                flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.3)]">
+                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-medium text-sm mb-1">Address</p>
+                    <p className="text-[#A1A1AA] text-sm leading-relaxed">
+                      1st Floor, Mashruwala Complex<br />
+                      Opp. New Circuit House<br />
+                      Patan-Chanasma Highway, Patan
+                    </p>
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-r from-[#FF6A00] to-[#FFB347]
+                                flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.3)]">
+                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-medium text-sm mb-1">Phone</p>
+                    <a href="tel:+919876543210" 
+                       className="text-[#A1A1AA] hover:text-[#FFB347] text-sm transition-colors">
+                      +91 98765 43210
+                    </a>
+                  </div>
+                </div>
+
+                {/* Hours */}
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-r from-[#FF6A00] to-[#FFB347]
+                                flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.3)]">
+                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-medium text-sm mb-1">Hours</p>
+                    <p className="text-[#A1A1AA] text-sm">
+                      Open 24/7<br />
+                      <span className="text-xs">Banquet by appointment</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Newsletter */}
+          <div className="py-12 border-b border-white/10">
+            <div className="max-w-2xl mx-auto text-center space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-2xl lg:text-3xl font-bold text-white">
+                  Join Our <span className="bg-gradient-to-r from-[#FF6A00] to-[#FFB347] bg-clip-text text-transparent">Fire Club</span>
+                </h3>
+                <p className="text-[#A1A1AA] text-sm">
+                  Get exclusive offers, menu updates, and special event invitations
+                </p>
+              </div>
+
+              <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="flex-1 px-6 py-4 bg-white/5 border border-white/10 rounded-full
+                           text-white placeholder-[#6B7280] focus:outline-none focus:border-[#FF6A00]/50 
+                           focus:bg-white/10 transition-all"
+                />
+                <button
+                  type="submit"
+                  className="px-8 py-4 bg-gradient-to-r from-[#FF6A00] to-[#FFB347] text-black font-bold 
+                           rounded-full hover:scale-105 active:scale-95 transition-all
+                           shadow-[0_0_25px_rgba(255,106,0,0.4)] hover:shadow-[0_0_40px_rgba(255,106,0,0.6)]
+                           whitespace-nowrap"
+                >
+                  Subscribe
+                </button>
+              </form>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-[#6B7280] text-sm text-center md:text-left">
+              © 2024 Floris Restaurant & Banquet. All rights reserved.
+            </p>
+            
+            <div className="flex flex-wrap justify-center gap-6 text-sm">
+              <a href="#" className="text-[#A1A1AA] hover:text-[#FFB347] transition-colors">Privacy Policy</a>
+              <span className="text-white/10">|</span>
+              <a href="#" className="text-[#A1A1AA] hover:text-[#FFB347] transition-colors">Terms of Service</a>
+              <span className="text-white/10">|</span>
+              <a href="#" className="text-[#A1A1AA] hover:text-[#FFB347] transition-colors">Cookie Policy</a>
+            </div>
           </div>
         </div>
       </div>
