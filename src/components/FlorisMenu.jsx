@@ -1,246 +1,250 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 
-// ─── Complete Menu Data ───────────────────────────────────────────────────────
+// ─── Complete Menu Data with Optimized Images ─────────────────────────────────
 const MENU_DATA = {
   "Soup": [
-    { name_en: "Cream of Tomato Soup", name_gu: "ક્રીમ ઓફ ટોમેટો સૂપ", price: "₹95", qty: "200 ml" },
-    { name_en: "Veg. Sweet Corn Soup", name_gu: "વેજ. સ્વીટ કોર્ન સૂપ", price: "₹95", qty: "200 ml" },
-    { name_en: "Cheese Corn Soup", name_gu: "ચીઝ કોર્ન સૂપ", price: "₹110", qty: "200 ml" },
-    { name_en: "Veg. Clear Soup", name_gu: "વેજ. ક્લિયર સૂપ", price: "₹110", qty: "200 ml" },
-    { name_en: "Minestrone Soup", name_gu: "મિનેસ્ટ્રોને સૂપ", price: "₹120", qty: "200 ml" },
-    { name_en: "Veg. Mushroom Soup", name_gu: "વેજ. મશરૂમ સૂપ", price: "₹130", qty: "200 ml" },
-    { name_en: "Veg. Manchow Soup", name_gu: "વેજ. મન્ચો સૂપ", price: "₹120", qty: "200 ml" },
-    { name_en: "Veg. Hot & Sour Soup", name_gu: "વેજ. હોટ એન્ડ સાવર સૂપ", price: "₹120", qty: "200 ml" },
-    { name_en: "Veg. Manchurian Soup", name_gu: "વેજ. મન્ચુરિયન સૂપ", price: "₹130", qty: "200 ml" },
-    { name_en: "Lemon Coriander Soup", name_gu: "લેમન કોરિઅન્ડર સૂપ", price: "₹110", qty: "200 ml" },
+    { name_en: "Cream of Tomato Soup", name_gu: "ક્રીમ ઓફ ટોમેટો સૂપ", price: "₹95", qty: "200 ml", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&q=80" },
+    { name_en: "Veg. Sweet Corn Soup", name_gu: "વેજ. સ્વીટ કોર્ન સૂપ", price: "₹95", qty: "200 ml", img: "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=400&q=80" },
+    { name_en: "Cheese Corn Soup", name_gu: "ચીઝ કોર્ન સૂપ", price: "₹110", qty: "200 ml", img: "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80" },
+    { name_en: "Veg. Clear Soup", name_gu: "વેજ. ક્લિયર સૂપ", price: "₹110", qty: "200 ml", img: "https://images.unsplash.com/photo-1559847844-5315695dadae?w=400&q=80" },
+    { name_en: "Minestrone Soup", name_gu: "મિનેસ્ટ્રોને સૂપ", price: "₹120", qty: "200 ml", img: "https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80" },
+    { name_en: "Veg. Mushroom Soup", name_gu: "વેજ. મશરૂમ સૂપ", price: "₹130", qty: "200 ml", img: "https://images.unsplash.com/photo-1612870486017-f62aec16f602?w=400&q=80" },
+    { name_en: "Veg. Manchow Soup", name_gu: "વેજ. મન્ચો સૂપ", price: "₹120", qty: "200 ml", img: "https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?w=400&q=80" },
+    { name_en: "Veg. Hot & Sour Soup", name_gu: "વેજ. હોટ એન્ડ સાવર સૂપ", price: "₹120", qty: "200 ml", img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&q=80" },
+    { name_en: "Veg. Manchurian Soup", name_gu: "વેજ. મન્ચુરિયન સૂપ", price: "₹130", qty: "200 ml", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&q=80" },
+    { name_en: "Lemon Coriander Soup", name_gu: "લેમન કોરિઅન્ડર સૂપ", price: "₹110", qty: "200 ml", img: "https://images.unsplash.com/photo-1588566565463-180a5b2090d2?w=400&q=80" },
   ],
   "Sandwich & Fries": [
-    { name_en: "Veg. Sandwich", name_gu: "વેજ. સેન્ડવિચ", price: "₹70", qty: "150 gm" },
-    { name_en: "Veg. Grilled Sandwich", name_gu: "વેજ. ગ્રિલ સેન્ડવિચ", price: "₹100", qty: "150 gm" },
-    { name_en: "Cheese Sandwich", name_gu: "ચીઝ સેન્ડવિચ", price: "₹90", qty: "150 gm" },
-    { name_en: "Cheese Grilled Sandwich", name_gu: "ચીઝ ગ્રિલ સેન્ડવિચ", price: "₹110", qty: "150 gm" },
-    { name_en: "Bread Butter", name_gu: "બ્રેડ બટર", price: "₹40", qty: "120 gm" },
-    { name_en: "Bread Butter Jam", name_gu: "બ્રેડ બટર જામ", price: "₹50", qty: "130 gm" },
-    { name_en: "French Fries", name_gu: "ફ્રેન્ચ ફ્રાઈઝ", price: "₹90", qty: "100 gm" },
-    { name_en: "Peri Peri French Fries", name_gu: "પેરી પેરી ફ્રેન્ચ ફ્રાઈઝ", price: "₹100", qty: "100 gm" },
+    { name_en: "Veg. Sandwich", name_gu: "વેજ. સેન્ડવિચ", price: "₹70", qty: "150 gm", img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&q=80" },
+    { name_en: "Veg. Grilled Sandwich", name_gu: "વેજ. ગ્રિલ સેન્ડવિચ", price: "₹100", qty: "150 gm", img: "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=400&q=80" },
+    { name_en: "Cheese Sandwich", name_gu: "ચીઝ સેન્ડવિચ", price: "₹90", qty: "150 gm", img: "https://images.unsplash.com/photo-1553909489-cd47e0907980?w=400&q=80" },
+    { name_en: "Cheese Grilled Sandwich", name_gu: "ચીઝ ગ્રિલ સેન્ડવિચ", price: "₹110", qty: "150 gm", img: "https://images.unsplash.com/photo-1550507992-eb63ffee0847?w=400&q=80" },
+    { name_en: "Bread Butter", name_gu: "બ્રેડ બટર", price: "₹40", qty: "120 gm", img: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=400&q=80" },
+    { name_en: "Bread Butter Jam", name_gu: "બ્રેડ બટર જામ", price: "₹50", qty: "130 gm", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80" },
+    { name_en: "French Fries", name_gu: "ફ્રેન્ચ ફ્રાઈઝ", price: "₹90", qty: "100 gm", img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80" },
+    { name_en: "Peri Peri French Fries", name_gu: "પેરી પેરી ફ્રેન્ચ ફ્રાઈઝ", price: "₹100", qty: "100 gm", img: "https://images.unsplash.com/photo-1630431341973-02e1c6c063eb?w=400&q=80" },
   ],
   "Chinese Starter": [
-    { name_en: "Veg. Manchurian (Dry/Gravy)", name_gu: "વેજ. મન્ચુરિયન (ડ્રાય/ગ્રેવી)", price: "₹190", qty: "350 gm" },
-    { name_en: "Paneer Manchurian (Dry/Gravy)", name_gu: "પનીર મન્ચુરિયન (ડ્રાય/ગ્રેવી)", price: "₹199", qty: "350 gm" },
-    { name_en: "Paneer Chilli (Dry/Gravy)", name_gu: "પનીર ચિલી (ડ્રાય/ગ્રેવી)", price: "₹220", qty: "350 gm" },
-    { name_en: "Paneer 65", name_gu: "પનીર 65", price: "₹210", qty: "350 gm" },
-    { name_en: "Baby Corn Chilli", name_gu: "બેબી કોર્ન ચિલી", price: "₹190", qty: "350 gm" },
-    { name_en: "Veg. Spring Roll", name_gu: "વેજ. સ્પ્રિંગ રોલ", price: "₹199", qty: "350 gm" },
-    { name_en: "Veg. Crispy", name_gu: "વેજ. ક્રિસ્પી", price: "₹190", qty: "350 gm" },
-    { name_en: "Chinese Bhel", name_gu: "ચાઈનીઝ ભેળ", price: "₹199", qty: "350 gm" },
-    { name_en: "Dragon Paneer Dry", name_gu: "ડ્રેગન પનીર ડ્રાય", price: "₹230", qty: "350 gm" },
-    { name_en: "Paneer Kurkure", name_gu: "પનીર કુરકુરે", price: "₹190", qty: "350 gm" },
-    { name_en: "Veg. Lolipop", name_gu: "વેજ. લોલીપોપ", price: "₹190", qty: "350 gm" },
+    { name_en: "Veg. Manchurian (Dry/Gravy)", name_gu: "વેજ. મન્ચુરિયન (ડ્રાય/ગ્રેવી)", price: "₹190", qty: "350 gm", img: "https://images.unsplash.com/photo-1626074353765-517a65ead1c2?w=400&q=80" },
+    { name_en: "Paneer Manchurian (Dry/Gravy)", name_gu: "પનીર મન્ચુરિયન (ડ્રાય/ગ્રેવી)", price: "₹199", qty: "350 gm", img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80" },
+    { name_en: "Paneer Chilli (Dry/Gravy)", name_gu: "પનીર ચિલી (ડ્રાય/ગ્રેવી)", price: "₹220", qty: "350 gm", img: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&q=80" },
+    { name_en: "Paneer 65", name_gu: "પનીર 65", price: "₹210", qty: "350 gm", img: "https://images.unsplash.com/photo-1628294895950-9805252327bc?w=400&q=80" },
+    { name_en: "Baby Corn Chilli", name_gu: "બેબી કોર્ન ચિલી", price: "₹190", qty: "350 gm", img: "https://images.unsplash.com/photo-1625398407796-82650a8c135f?w=400&q=80" },
+    { name_en: "Veg. Spring Roll", name_gu: "વેજ. સ્પ્રિંગ રોલ", price: "₹199", qty: "350 gm", img: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=400&q=80" },
+    { name_en: "Veg. Crispy", name_gu: "વેજ. ક્રિસ્પી", price: "₹190", qty: "350 gm", img: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&q=80" },
+    { name_en: "Chinese Bhel", name_gu: "ચાઈનીઝ ભેળ", price: "₹199", qty: "350 gm", img: "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400&q=80" },
+    { name_en: "Dragon Paneer Dry", name_gu: "ડ્રેગન પનીર ડ્રાય", price: "₹230", qty: "350 gm", img: "https://images.unsplash.com/photo-1634141510639-d691d86f47be?w=400&q=80" },
+    { name_en: "Paneer Kurkure", name_gu: "પનીર કુરકુરે", price: "₹190", qty: "350 gm", img: "https://images.unsplash.com/photo-1645177628172-a94c30a5e2d8?w=400&q=80" },
+    { name_en: "Veg. Lolipop", name_gu: "વેજ. લોલીપોપ", price: "₹190", qty: "350 gm", img: "https://images.unsplash.com/photo-1633945274309-698c2f10bc47?w=400&q=80" },
   ],
   "Chinese Noodles & Rice": [
-    { name_en: "Veg. Hakka Noodles", name_gu: "વેજ. હક્કા નૂડલ્સ", price: "₹190", qty: "350 gm" },
-    { name_en: "Schezwan Noodles", name_gu: "સેઝવાન નૂડલ્સ", price: "₹190", qty: "350 gm" },
-    { name_en: "Chilli Garlic Noodles", name_gu: "ચિલી ગાર્લિક નૂડલ્સ", price: "₹190", qty: "350 gm" },
-    { name_en: "Veg. Manchurian Noodles", name_gu: "વેજ. મન્ચુરિયન નૂડલ્સ", price: "₹170", qty: "300 gm" },
-    { name_en: "Veg. Fried Rice", name_gu: "વેજ. ફ્રાઈડ રાઈસ", price: "₹170", qty: "300 gm" },
-    { name_en: "Schezwan Fried Rice", name_gu: "સેઝવાન ફ્રાઈડ રાઈસ", price: "₹170", qty: "300 gm" },
-    { name_en: "Chinese Fried Rice", name_gu: "ચાઈનીઝ ફ્રાઈડ રાઈસ", price: "₹180", qty: "300 gm" },
-    { name_en: "Manchurian Fried Rice", name_gu: "મન્ચુરિયન ફ્રાઈડ રાઈસ", price: "₹185", qty: "300 gm" },
-    { name_en: "Mushroom Fried Rice", name_gu: "મશરૂમ ફ્રાઈડ રાઈસ", price: "₹185", qty: "300 gm" },
+    { name_en: "Veg. Hakka Noodles", name_gu: "વેજ. હક્કા નૂડલ્સ", price: "₹190", qty: "350 gm", img: "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=400&q=80" },
+    { name_en: "Schezwan Noodles", name_gu: "સેઝવાન નૂડલ્સ", price: "₹190", qty: "350 gm", img: "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80" },
+    { name_en: "Chilli Garlic Noodles", name_gu: "ચિલી ગાર્લિક નૂડલ્સ", price: "₹190", qty: "350 gm", img: "https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=80" },
+    { name_en: "Veg. Manchurian Noodles", name_gu: "વેજ. મન્ચુરિયન નૂડલ્સ", price: "₹170", qty: "300 gm", img: "https://images.unsplash.com/photo-1630409346460-ad2b042d562d?w=400&q=80" },
+    { name_en: "Veg. Fried Rice", name_gu: "વેજ. ફ્રાઈડ રાઈસ", price: "₹170", qty: "300 gm", img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80" },
+    { name_en: "Schezwan Fried Rice", name_gu: "સેઝવાન ફ્રાઈડ રાઈસ", price: "₹170", qty: "300 gm", img: "https://images.unsplash.com/photo-1516684732162-798a0062be99?w=400&q=80" },
+    { name_en: "Chinese Fried Rice", name_gu: "ચાઈનીઝ ફ્રાઈડ રાઈસ", price: "₹180", qty: "300 gm", img: "https://images.unsplash.com/photo-1603133872594-e5c8965092b1?w=400&q=80" },
+    { name_en: "Manchurian Fried Rice", name_gu: "મન્ચુરિયન ફ્રાઈડ રાઈસ", price: "₹185", qty: "300 gm", img: "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=400&q=80" },
+    { name_en: "Mushroom Fried Rice", name_gu: "મશરૂમ ફ્રાઈડ રાઈસ", price: "₹185", qty: "300 gm", img: "https://images.unsplash.com/photo-1603133872741-03e86c52041e?w=400&q=80" },
   ],
   "Tandoor Starter": [
-    { name_en: "Sp. Floris Platter", name_gu: "સ્પે. ફ્લોરિસ પ્લેટર", price: "₹269", qty: "9 Pcs", special: true },
-    { name_en: "Paneer Tikka Dry", name_gu: "પનીર ટિક્કા ડ્રાય", price: "₹230", qty: "8 Pcs" },
-    { name_en: "Paneer Hariyali Tikka", name_gu: "પનીર હરિયાળી ટિક્કા", price: "₹220", qty: "8 Pcs" },
-    { name_en: "Peri Peri Paneer Tikka Dry", name_gu: "પેરી પેરી પનીર ટિક્કા ડ્રાય", price: "₹250", qty: "8 Pcs" },
-    { name_en: "Corn Tikki", name_gu: "કોર્ન ટિક્કી", price: "₹190", qty: "8 Pcs" },
-    { name_en: "Hara Bhara Kabab", name_gu: "હરા ભરા કબાબ", price: "₹210", qty: "8 Pcs" },
+    { name_en: "Sp. Floris Platter", name_gu: "સ્પે. ફ્લોરિસ પ્લેટર", price: "₹269", qty: "9 Pcs", special: true, img: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&q=80" },
+    { name_en: "Paneer Tikka Dry", name_gu: "પનીર ટિક્કા ડ્રાય", price: "₹230", qty: "8 Pcs", img: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&q=80" },
+    { name_en: "Paneer Hariyali Tikka", name_gu: "પનીર હરિયાળી ટિક્કા", price: "₹220", qty: "8 Pcs", img: "https://images.unsplash.com/photo-1628294896516-118c0c52e944?w=400&q=80" },
+    { name_en: "Peri Peri Paneer Tikka Dry", name_gu: "પેરી પેરી પનીર ટિક્કા ડ્રાય", price: "₹250", qty: "8 Pcs", img: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&q=80" },
+    { name_en: "Corn Tikki", name_gu: "કોર્ન ટિક્કી", price: "₹190", qty: "8 Pcs", img: "https://images.unsplash.com/photo-1606850780554-b55ef9dfc685?w=400&q=80" },
+    { name_en: "Hara Bhara Kabab", name_gu: "હરા ભરા કબાબ", price: "₹210", qty: "8 Pcs", img: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&q=80" },
   ],
   "Sizzlers": [
-    { name_en: "Sp. Floris Sizzler", name_gu: "સ્પે. ફ્લોરિસ સીઝલર", price: "₹399", qty: "750 gm", special: true },
-    { name_en: "Sp. Mix Veg. Grill Sizzler", name_gu: "સ્પે. મિક્સ વેજ. ગ્રિલ સીઝલર", price: "₹350", qty: "750 gm" },
-    { name_en: "Sp. Chinese Sizzler", name_gu: "સ્પે. ચાઈનીઝ સીઝલર", price: "₹370", qty: "750 gm" },
-    { name_en: "Sp. Paneer Stick Sizzler", name_gu: "સ્પે. પનીર સ્ટિક સીઝલર", price: "₹390", qty: "750 gm" },
+    { name_en: "Sp. Floris Sizzler", name_gu: "સ્પે. ફ્લોરિસ સીઝલર", price: "₹399", qty: "750 gm", special: true, img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80" },
+    { name_en: "Sp. Mix Veg. Grill Sizzler", name_gu: "સ્પે. મિક્સ વેજ. ગ્રિલ સીઝલર", price: "₹350", qty: "750 gm", img: "https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80" },
+    { name_en: "Sp. Chinese Sizzler", name_gu: "સ્પે. ચાઈનીઝ સીઝલર", price: "₹370", qty: "750 gm", img: "https://images.unsplash.com/photo-1626074353765-517a65ead1c2?w=400&q=80" },
+    { name_en: "Sp. Paneer Stick Sizzler", name_gu: "સ્પે. પનીર સ્ટિક સીઝલર", price: "₹390", qty: "750 gm", img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80" },
   ],
   "Baked Dish": [
-    { name_en: "Baked Macaroni", name_gu: "બેકડ મેકરોની", price: "₹199", qty: "250 gm" },
-    { name_en: "Baked Macaroni With Paneer/Cheese", name_gu: "બેકડ મેકરોની વિથ પનીર/ચીઝ", price: "₹220", qty: "250 gm" },
-    { name_en: "Baked Pasta", name_gu: "બેકડ પાસ્તા", price: "₹190", qty: "250 gm" },
-    { name_en: "Baked Pasta With Paneer/Cheese", name_gu: "બેકડ પાસ્તા વિથ પનીર/ચીઝ", price: "₹210", qty: "250 gm" },
+    { name_en: "Baked Macaroni", name_gu: "બેકડ મેકરોની", price: "₹199", qty: "250 gm", img: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80" },
+    { name_en: "Baked Macaroni With Paneer/Cheese", name_gu: "બેકડ મેકરોની વિથ પનીર/ચીઝ", price: "₹220", qty: "250 gm", img: "https://images.unsplash.com/photo-1608219992759-8d74ed8d76eb?w=400&q=80" },
+    { name_en: "Baked Pasta", name_gu: "બેકડ પાસ્તા", price: "₹190", qty: "250 gm", img: "https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=400&q=80" },
+    { name_en: "Baked Pasta With Paneer/Cheese", name_gu: "બેકડ પાસ્તા વિથ પનીર/ચીઝ", price: "₹210", qty: "250 gm", img: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80" },
   ],
   "Paneer Main Course": [
-    { name_en: "Sp. Floris Paneer", name_gu: "સ્પે. ફ્લોરિસ પનીર", price: "₹240", qty: "350 gm", special: true },
-    { name_en: "Sp. Paneer Chingari", name_gu: "સ્પે. પનીર ચીંગારી", price: "₹220", qty: "350 gm", special: true },
-    { name_en: "Sp. Paneer Lakhani", name_gu: "સ્પે. પનીર લખાણી", price: "₹210", qty: "350 gm" },
-    { name_en: "Sp. Paneer Banjara", name_gu: "સ્પે. પનીર બંજારા", price: "₹210", qty: "350 gm" },
-    { name_en: "Paneer Laziz", name_gu: "પનીર લઝીઝ", price: "₹210", qty: "350 gm" },
-    { name_en: "Paneer Tikka Masala", name_gu: "પનીર ટિક્કા મસાલા", price: "₹210", qty: "300 gm" },
-    { name_en: "Paneer Butter Masala", name_gu: "પનીર બટર મસાલા", price: "₹190", qty: "300 gm" },
-    { name_en: "Paneer Angara", name_gu: "પનીર અંગારા", price: "₹190", qty: "300 gm" },
-    { name_en: "Paneer Toofani", name_gu: "પનીર તૂફાની", price: "₹199", qty: "300 gm" },
-    { name_en: "Paneer Tawa Masala", name_gu: "પનીર તવા મસાલા", price: "₹190", qty: "300 gm" },
-    { name_en: "Paneer Handi / Kadai / Balti", name_gu: "પનીર હાંડી / કડાઈ / બાલ્ટી", price: "₹199", qty: "300 gm" },
-    { name_en: "Paneer Bhurji", name_gu: "પનીર ભુરજી", price: "₹199", qty: "300 gm" },
-    { name_en: "Paneer Patiala", name_gu: "પનીર પટિયાલા", price: "₹210", qty: "300 gm" },
-    { name_en: "Paneer Kolsanda", name_gu: "પનીર કોલસંદા", price: "₹199", qty: "300 gm" },
-    { name_en: "Shahi Paneer", name_gu: "શાહી પનીર", price: "₹199", qty: "300 gm" },
-    { name_en: "Paneer Lababdar", name_gu: "પનીર લબાબદાર", price: "₹190", qty: "300 gm" },
-    { name_en: "Paneer Chatpata", name_gu: "પનીર ચટપટા", price: "₹190", qty: "300 gm" },
-    { name_en: "Paneer Hariyali Masala", name_gu: "પનીર હરિયાળી મસાલા", price: "₹190", qty: "300 gm" },
-    { name_en: "Palak Paneer / Matar Paneer", name_gu: "પાલક પનીર / મટર પનીર", price: "₹180", qty: "300 gm" },
+    { name_en: "Sp. Floris Paneer", name_gu: "સ્પે. ફ્લોરિસ પનીર", price: "₹240", qty: "350 gm", special: true, img: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&q=80" },
+    { name_en: "Sp. Paneer Chingari", name_gu: "સ્પે. પનીર ચીંગારી", price: "₹220", qty: "350 gm", special: true, img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80" },
+    { name_en: "Sp. Paneer Lakhani", name_gu: "સ્પે. પનીર લખાણી", price: "₹210", qty: "350 gm", img: "https://images.unsplash.com/photo-1628294895950-9805252327bc?w=400&q=80" },
+    { name_en: "Sp. Paneer Banjara", name_gu: "સ્પે. પનીર બંજારા", price: "₹210", qty: "350 gm", img: "https://images.unsplash.com/photo-1645177628172-a94c30a5e2d8?w=400&q=80" },
+    { name_en: "Paneer Laziz", name_gu: "પનીર લઝીઝ", price: "₹210", qty: "350 gm", img: "https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80" },
+    { name_en: "Paneer Tikka Masala", name_gu: "પનીર ટિક્કા મસાલા", price: "₹210", qty: "300 gm", img: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&q=80" },
+    { name_en: "Paneer Butter Masala", name_gu: "પનીર બટર મસાલા", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&q=80" },
+    { name_en: "Paneer Angara", name_gu: "પનીર અંગારા", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1628294895950-9805252327bc?w=400&q=80" },
+    { name_en: "Paneer Toofani", name_gu: "પનીર તૂફાની", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80" },
+    { name_en: "Paneer Tawa Masala", name_gu: "પનીર તવા મસાલા", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1645177628172-a94c30a5e2d8?w=400&q=80" },
+    { name_en: "Paneer Handi / Kadai / Balti", name_gu: "પનીર હાંડી / કડાઈ / બાલ્ટી", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&q=80" },
+    { name_en: "Paneer Bhurji", name_gu: "પનીર ભુરજી", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1626506589459-78c2f380b1bd?w=400&q=80" },
+    { name_en: "Paneer Patiala", name_gu: "પનીર પટિયાલા", price: "₹210", qty: "300 gm", img: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&q=80" },
+    { name_en: "Paneer Kolsanda", name_gu: "પનીર કોલસંદા", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80" },
+    { name_en: "Shahi Paneer", name_gu: "શાહી પનીર", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&q=80" },
+    { name_en: "Paneer Lababdar", name_gu: "પનીર લબાબદાર", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80" },
+    { name_en: "Paneer Chatpata", name_gu: "પનીર ચટપટા", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1628294895950-9805252327bc?w=400&q=80" },
+    { name_en: "Paneer Hariyali Masala", name_gu: "પનીર હરિયાળી મસાલા", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1628294896516-118c0c52e944?w=400&q=80" },
+    { name_en: "Palak Paneer / Matar Paneer", name_gu: "પાલક પનીર / મટર પનીર", price: "₹180", qty: "300 gm", img: "https://images.unsplash.com/photo-1645177628172-a94c30a5e2d8?w=400&q=80" },
   ],
   "Cheese Main Course": [
-    { name_en: "Cheese Tawa Masala", name_gu: "ચીઝ તવા મસાલા", price: "₹199", qty: "300 gm" },
-    { name_en: "Cheese Butter Masala", name_gu: "ચીઝ બટર મસાલા", price: "₹199", qty: "300 gm" },
-    { name_en: "Cheese Paneer Masala", name_gu: "ચીઝ પનીર મસાલા", price: "₹210", qty: "300 gm" },
-    { name_en: "Cheese Lababdar", name_gu: "ચીઝ લબાબદાર", price: "₹210", qty: "300 gm" },
-    { name_en: "Cheese Kaju Masala", name_gu: "ચીઝ કાજુ મસાલા", price: "₹220", qty: "300 gm" },
+    { name_en: "Cheese Tawa Masala", name_gu: "ચીઝ તવા મસાલા", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=400&q=80" },
+    { name_en: "Cheese Butter Masala", name_gu: "ચીઝ બટર મસાલા", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1619774475093-e99dcc58e72f?w=400&q=80" },
+    { name_en: "Cheese Paneer Masala", name_gu: "ચીઝ પનીર મસાલા", price: "₹210", qty: "300 gm", img: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&q=80" },
+    { name_en: "Cheese Lababdar", name_gu: "ચીઝ લબાબદાર", price: "₹210", qty: "300 gm", img: "https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80" },
+    { name_en: "Cheese Kaju Masala", name_gu: "ચીઝ કાજુ મસાલા", price: "₹220", qty: "300 gm", img: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=400&q=80" },
   ],
   "Kaju Main Course": [
-    { name_en: "Kaju Tawa Masala", name_gu: "કાજુ તવા મસાલા", price: "₹210", qty: "300 gm" },
-    { name_en: "Kaju Butter Masala", name_gu: "કાજુ બટર મસાલા", price: "₹220", qty: "300 gm" },
-    { name_en: "Kaju Curry", name_gu: "કાજુ કરી", price: "₹220", qty: "300 gm" },
-    { name_en: "Kaju Masala", name_gu: "કાજુ મસાલા", price: "₹220", qty: "300 gm" },
-    { name_en: "Kaju Handi Masala", name_gu: "કાજુ હાંડી મસાલા", price: "₹220", qty: "300 gm" },
-    { name_en: "Kaju Kari (Sweet)", name_gu: "કાજુ કરી (સ્વીટ)", price: "₹230", qty: "300 gm" },
-  ],
+    { name_en: "Kaju Tawa Masala", name_gu: "કાજુ તવા મસાલા", price: "₹210", qty: "300 gm", img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80" },
+    { name_en: "Kaju Butter Masala", name_gu: "કાજુ બટર મસાલા", price: "₹220", qty: "300 gm", img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80" },
+    { name_en: "Kaju Curry", name_gu: "કાજુ કરી", price: "₹220", qty: "300 gm", img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80" },
+    { name_en: "Kaju Masala", name_gu: "કાજુ મસાલા", price: "₹220", qty: "300 gm", img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80" },
+    { name_en: "Kaju Handi Masala", name_gu: "કાજુ હાંડી મસાલા", price: "₹220", qty: "300 gm", img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80" },
+    { name_en: "Kaju Kari (Sweet)", name_gu: "કાજુ કરી (સ્વીટ)", price: "₹230", qty: "300 gm", img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80" },
+  ],  
   "Kofta Main Course": [
-    { name_en: "Veg. Kofta", name_gu: "વેજ. કોફ્તા", price: "₹170", qty: "300 gm" },
-    { name_en: "Paneer Kofta", name_gu: "પનીર કોફ્તા", price: "₹190", qty: "300 gm" },
-    { name_en: "Cheese Kofta", name_gu: "ચીઝ કોફ્તા", price: "₹199", qty: "300 gm" },
-    { name_en: "Kaju Kofta", name_gu: "કાજુ કોફ્તા", price: "₹199", qty: "300 gm" },
-    { name_en: "Malai Kofta (Sweet)", name_gu: "મલાઈ કોફ્તા (સ્વીટ)", price: "₹180", qty: "300 gm" },
-    { name_en: "Kashmiri Kofta (Sweet)", name_gu: "કાશ્મીરી કોફ્તા (સ્વીટ)", price: "₹190", qty: "300 gm" },
+    { name_en: "Veg. Kofta", name_gu: "વેજ. કોફ્તા", price: "₹170", qty: "300 gm", img: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&q=80" },
+    { name_en: "Paneer Kofta", name_gu: "પનીર કોફ્તા", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1626074353765-517a65ead1c2?w=400&q=80" },
+    { name_en: "Cheese Kofta", name_gu: "ચીઝ કોફ્તા", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=400&q=80" },
+    { name_en: "Kaju Kofta", name_gu: "કાજુ કોફ્તા", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80" },
+    { name_en: "Malai Kofta (Sweet)", name_gu: "મલાઈ કોફ્તા (સ્વીટ)", price: "₹180", qty: "300 gm", img: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&q=80" },
+    { name_en: "Kashmiri Kofta (Sweet)", name_gu: "કાશ્મીરી કોફ્તા (સ્વીટ)", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400&q=80" },
   ],
   "Veg. Main Course": [
-    { name_en: "Sp. Veg. Floris", name_gu: "સ્પે. વેજ. ફ્લોરિસ", price: "₹220", qty: "350 gm", special: true },
-    { name_en: "Veg. Angara", name_gu: "વેજ. અંગારા", price: "₹185", qty: "350 gm" },
-    { name_en: "Veg. Toofani", name_gu: "વેજ. તૂફાની", price: "₹180", qty: "350 gm" },
-    { name_en: "Veg. Tawa Masala", name_gu: "વેજ. તવા મસાલા", price: "₹180", qty: "350 gm" },
-    { name_en: "Veg. Kadai / Handi / Balti", name_gu: "વેજ. કડાઈ/હાંડી/બાલ્ટી", price: "₹190", qty: "300 gm" },
-    { name_en: "Veg. Jaipuri", name_gu: "વેજ. જયપુરી", price: "₹180", qty: "300 gm" },
-    { name_en: "Veg. Hydrabadi", name_gu: "વેજ. હૈદરાબાદી", price: "₹180", qty: "300 gm" },
-    { name_en: "Veg. Kolhapuri", name_gu: "વેજ. કોલ્હાપુરી", price: "₹180", qty: "300 gm" },
-    { name_en: "Veg. Makhanwala", name_gu: "વેજ. મખનવાલા", price: "₹180", qty: "300 gm" },
-    { name_en: "Veg. Shahi Korma", name_gu: "વેજ. શાહી કોર્મા", price: "₹190", qty: "300 gm" },
-    { name_en: "Veg. Nawabi", name_gu: "વેજ. નવાબી", price: "₹190", qty: "300 gm" },
-    { name_en: "Veg. Diwani Handi", name_gu: "વેજ. દીવાની હાંડી", price: "₹190", qty: "300 gm" },
-    { name_en: "Veg. Chatpata", name_gu: "વેજ. ચટપટા", price: "₹180", qty: "300 gm" },
-    { name_en: "Mushroom Masala", name_gu: "મશરૂમ મસાલા", price: "₹190", qty: "300 gm" },
-    { name_en: "Navratan Korma (Sweet)", name_gu: "નવરત્ન કોર્મા (સ્વીટ)", price: "₹199", qty: "300 gm" },
-    { name_en: "Mix Veg.", name_gu: "મિક્સ વેજ", price: "₹150", qty: "300 gm" },
-    { name_en: "Chana Masala", name_gu: "ચણા મસાલા", price: "₹140", qty: "300 gm" },
-    { name_en: "Sev Tomato", name_gu: "સેવ ટામેટા", price: "₹140", qty: "300 gm" },
-    { name_en: "Lasaniya Bataka", name_gu: "લસણિયા બટાકા", price: "₹140", qty: "300 gm" },
-    { name_en: "Aahi Tikhari", name_gu: "આહી તીખારી", price: "₹130", qty: "300 gm" },
-    { name_en: "Aloo Jeera / Palak / Mutter", name_gu: "આલુ જીરા/પાલક/મટર", price: "₹130", qty: "300 gm" },
-    { name_en: "Sukhi Bhaji", name_gu: "સુકી ભાજી", price: "₹140", qty: "300 gm" },
-    { name_en: "Aloo (Punjabi)", name_gu: "આલુ (પંજાબી)", price: "₹130", qty: "300 gm" },
-    { name_en: "Plain Palak", name_gu: "પ્લેન પાલક", price: "₹130", qty: "300 gm" },
+    { name_en: "Sp. Veg. Floris", name_gu: "સ્પે. વેજ. ફ્લોરિસ", price: "₹220", qty: "350 gm", special: true, img: "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=400&q=80" },
+    { name_en: "Veg. Angara", name_gu: "વેજ. અંગારા", price: "₹185", qty: "350 gm", img: "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=400&q=80" },
+    { name_en: "Veg. Toofani", name_gu: "વેજ. તૂફાની", price: "₹180", qty: "350 gm", img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400&q=80" },
+    { name_en: "Veg. Tawa Masala", name_gu: "વેજ. તવા મસાલા", price: "₹180", qty: "350 gm", img: "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=400&q=80" },
+    { name_en: "Veg. Kadai / Handi / Balti", name_gu: "વેજ. કડાઈ/હાંડી/બાલ્ટી", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&q=80" },
+    { name_en: "Veg. Jaipuri", name_gu: "વેજ. જયપુરી", price: "₹180", qty: "300 gm", img: "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=400&q=80" },
+    { name_en: "Veg. Hydrabadi", name_gu: "વેજ. હૈદરાબાદી", price: "₹180", qty: "300 gm", img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400&q=80" },
+    { name_en: "Veg. Kolhapuri", name_gu: "વેજ. કોલ્હાપુરી", price: "₹180", qty: "300 gm", img: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&q=80" },
+    { name_en: "Veg. Makhanwala", name_gu: "વેજ. મખનવાલા", price: "₹180", qty: "300 gm", img: "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=400&q=80" },
+    { name_en: "Veg. Shahi Korma", name_gu: "વેજ. શાહી કોર્મા", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400&q=80" },
+    { name_en: "Veg. Nawabi", name_gu: "વેજ. નવાબી", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=400&q=80" },
+    { name_en: "Veg. Diwani Handi", name_gu: "વેજ. દીવાની હાંડી", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&q=80" },
+    { name_en: "Veg. Chatpata", name_gu: "વેજ. ચટપટા", price: "₹180", qty: "300 gm", img: "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=400&q=80" },
+    { name_en: "Mushroom Masala", name_gu: "મશરૂમ મસાલા", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1612870486017-f62aec16f602?w=400&q=80" },
+    { name_en: "Navratan Korma (Sweet)", name_gu: "નવરત્ન કોર્મા (સ્વીટ)", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400&q=80" },
+    { name_en: "Mix Veg.", name_gu: "મિક્સ વેજ", price: "₹150", qty: "300 gm", img: "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=400&q=80" },
+    { name_en: "Chana Masala", name_gu: "ચણા મસાલા", price: "₹140", qty: "300 gm", img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80" },
+    { name_en: "Sev Tomato", name_gu: "સેવ ટામેટા", price: "₹140", qty: "300 gm", img: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&q=80" },
+    { name_en: "Lasaniya Bataka", name_gu: "લસણિયા બટાકા", price: "₹140", qty: "300 gm", img: "https://images.unsplash.com/photo-1612874292534-099bfb9ee577?w=400&q=80" },
+    { name_en: "Aahi Tikhari", name_gu: "આહી તીખારી", price: "₹130", qty: "300 gm", img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400&q=80" },
+    { name_en: "Aloo Jeera / Palak / Mutter", name_gu: "આલુ જીરા/પાલક/મટર", price: "₹130", qty: "300 gm", img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80" },
+    { name_en: "Sukhi Bhaji", name_gu: "સુકી ભાજી", price: "₹140", qty: "300 gm", img: "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=400&q=80" },
+    { name_en: "Aloo (Punjabi)", name_gu: "આલુ (પંજાબી)", price: "₹130", qty: "300 gm", img: "https://images.unsplash.com/photo-1612874292534-099bfb9ee577?w=400&q=80" },
+    { name_en: "Plain Palak", name_gu: "પ્લેન પાલક", price: "₹130", qty: "300 gm", img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400&q=80" },
   ],
   "Dal Mazedar": [
-    { name_en: "Dal Fry", name_gu: "દાળ ફ્રાય", price: "₹110", qty: "300 gm" },
-    { name_en: "Dal Fry Butter", name_gu: "દાળ ફ્રાય બટર", price: "₹120", qty: "300 gm" },
-    { name_en: "Dal Fry Tadka", name_gu: "દાળ ફ્રાય તડકા", price: "₹130", qty: "300 gm" },
-    { name_en: "Dal Palak", name_gu: "દાળ પાલક", price: "₹120", qty: "300 gm" },
-    { name_en: "Dal Makhani", name_gu: "દાળ મખની", price: "₹160", qty: "300 gm" },
+    { name_en: "Dal Fry", name_gu: "દાળ ફ્રાય", price: "₹110", qty: "300 gm", img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&q=80" },
+    { name_en: "Dal Fry Butter", name_gu: "દાળ ફ્રાય બટર", price: "₹120", qty: "300 gm", img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&q=80" },
+    { name_en: "Dal Fry Tadka", name_gu: "દાળ ફ્રાય તડકા", price: "₹130", qty: "300 gm", img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&q=80" },
+    { name_en: "Dal Palak", name_gu: "દાળ પાલક", price: "₹120", qty: "300 gm", img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&q=80" },
+    { name_en: "Dal Makhani", name_gu: "દાળ મખની", price: "₹160", qty: "300 gm", img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&q=80" },
   ],
   "Tandoori Roti": [
-    { name_en: "Plain Tandoori Roti", name_gu: "પ્લેન તંદૂરી રોટી", price: "₹20", qty: "1 Pcs" },
-    { name_en: "Butter Tandoori Roti", name_gu: "બટર તંદૂરી રોટી", price: "₹23", qty: "1 Pcs" },
-    { name_en: "Plain Tandoori Paratha", name_gu: "પ્લેન તંદૂરી પરાઠા", price: "₹42", qty: "1 Pcs" },
-    { name_en: "Butter Tandoori Paratha", name_gu: "બટર તંદૂરી પરાઠા", price: "₹45", qty: "1 Pcs" },
-    { name_en: "Lachha Paratha", name_gu: "લચ્છા પરાઠા", price: "₹45", qty: "1 Pcs" },
-    { name_en: "Plain Naan", name_gu: "પ્લેન નાન", price: "₹45", qty: "1 Pcs" },
-    { name_en: "Butter Naan", name_gu: "બટર નાન", price: "₹50", qty: "1 Pcs" },
-    { name_en: "Cheese Naan", name_gu: "ચીઝ નાન", price: "₹90", qty: "1 Pcs" },
-    { name_en: "Stuff Naan", name_gu: "સ્ટફ નાન", price: "₹90", qty: "1 Pcs" },
-    { name_en: "Garlic Naan", name_gu: "ગાર્લિક નાન", price: "₹90", qty: "1 Pcs" },
-    { name_en: "Cheese Garlic Naan", name_gu: "ચીઝ ગાર્લિક નાન", price: "₹110", qty: "1 Pcs" },
-    { name_en: "Cheese Chilly Garlic Naan", name_gu: "ચીઝ ચિલી ગાર્લિક નાન", price: "₹120", qty: "1 Pcs" },
-    { name_en: "Plain Kulcha", name_gu: "પ્લેન કુલચા", price: "₹45", qty: "1 Pcs" },
-    { name_en: "Butter Kulcha", name_gu: "બટર કુલચા", price: "₹50", qty: "1 Pcs" },
+    { name_en: "Plain Tandoori Roti", name_gu: "પ્લેન તંદૂરી રોટી", price: "₹20", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&q=80" },
+    { name_en: "Butter Tandoori Roti", name_gu: "બટર તંદૂરી રોટી", price: "₹23", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&q=80" },
+    { name_en: "Plain Tandoori Paratha", name_gu: "પ્લેન તંદૂરી પરાઠા", price: "₹42", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=400&q=80" },
+    { name_en: "Butter Tandoori Paratha", name_gu: "બટર તંદૂરી પરાઠા", price: "₹45", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=400&q=80" },
+    { name_en: "Lachha Paratha", name_gu: "લચ્છા પરાઠા", price: "₹45", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400&q=80" },
+    { name_en: "Plain Naan", name_gu: "પ્લેન નાન", price: "₹45", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&q=80" },
+    { name_en: "Butter Naan", name_gu: "બટર નાન", price: "₹50", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&q=80" },
+    { name_en: "Cheese Naan", name_gu: "ચીઝ નાન", price: "₹90", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1619774475093-e99dcc58e72f?w=400&q=80" },
+    { name_en: "Stuff Naan", name_gu: "સ્ટફ નાન", price: "₹90", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&q=80" },
+    { name_en: "Garlic Naan", name_gu: "ગાર્લિક નાન", price: "₹90", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80" },
+    { name_en: "Cheese Garlic Naan", name_gu: "ચીઝ ગાર્લિક નાન", price: "₹110", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1619774475093-e99dcc58e72f?w=400&q=80" },
+    { name_en: "Cheese Chilly Garlic Naan", name_gu: "ચીઝ ચિલી ગાર્લિક નાન", price: "₹120", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1619774475093-e99dcc58e72f?w=400&q=80" },
+    { name_en: "Plain Kulcha", name_gu: "પ્લેન કુલચા", price: "₹45", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&q=80" },
+    { name_en: "Butter Kulcha", name_gu: "બટર કુલચા", price: "₹50", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&q=80" },
   ],
   "Tawa Roti": [
-    { name_en: "Plain Chapati", name_gu: "પ્લેન ચપાટી", price: "₹18", qty: "1 Pcs" },
-    { name_en: "Butter Chapati", name_gu: "બટર ચપાટી", price: "₹20", qty: "1 Pcs" },
-    { name_en: "Plain Chapati Paratha", name_gu: "પ્લેન ચપાટી પરાઠા", price: "₹35", qty: "1 Pcs" },
-    { name_en: "Butter Chapati Paratha", name_gu: "બટર ચપાટી પરાઠા", price: "₹40", qty: "1 Pcs" },
-    { name_en: "Aloo Paratha with Curd", name_gu: "આલુ પરાઠા (દહીં સાથે)", price: "₹100", qty: "1 Pcs" },
+    { name_en: "Plain Chapati", name_gu: "પ્લેન ચપાટી", price: "₹18", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400&q=80" },
+    { name_en: "Butter Chapati", name_gu: "બટર ચપાટી", price: "₹20", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400&q=80" },
+    { name_en: "Plain Chapati Paratha", name_gu: "પ્લેન ચપાટી પરાઠા", price: "₹35", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=400&q=80" },
+    { name_en: "Butter Chapati Paratha", name_gu: "બટર ચપાટી પરાઠા", price: "₹40", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=400&q=80" },
+    { name_en: "Aloo Paratha with Curd", name_gu: "આલુ પરાઠા (દહીં સાથે)", price: "₹100", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400&q=80" },
   ],
   "Rice / Pulao / Biryani": [
-    { name_en: "Plain Rice", name_gu: "પ્લેન રાઈસ", price: "₹90", qty: "250 gm" },
-    { name_en: "Steam Rice", name_gu: "સ્ટીમ રાઈસ", price: "₹95", qty: "250 gm" },
-    { name_en: "Jeera Rice", name_gu: "જીરા રાઈસ", price: "₹150", qty: "250 gm" },
-    { name_en: "Veg. Pulao", name_gu: "વેજ પુલાવ", price: "₹140", qty: "300 gm" },
-    { name_en: "Peas Pulao", name_gu: "મટર પુલાવ", price: "₹190", qty: "300 gm" },
-    { name_en: "Kaju Pulao", name_gu: "કાજુ પુલાવ", price: "₹170", qty: "300 gm" },
-    { name_en: "Veg. Biryani (with raita)", name_gu: "વેજ બિરયાની (રાયતા સાથે)", price: "₹190", qty: "300 gm" },
-    { name_en: "Hyderabadi Biryani (with raita)", name_gu: "હૈદરાબાદી બિરયાની (રાયતા સાથે)", price: "₹199", qty: "300 gm" },
-    { name_en: "Handi Dum Biryani (with raita)", name_gu: "હાંડી દમ બિરયાની (રાયતા સાથે)", price: "₹199", qty: "300 gm" },
-    { name_en: "Kashmiri Pulao (Sweet)", name_gu: "કાશ્મીરી પુલાવ (સ્વીટ)", price: "₹170", qty: "300 gm" },
+    { name_en: "Plain Rice", name_gu: "પ્લેન રાઈસ", price: "₹90", qty: "250 gm", img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&q=80" },
+    { name_en: "Steam Rice", name_gu: "સ્ટીમ રાઈસ", price: "₹95", qty: "250 gm", img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&q=80" },
+    { name_en: "Jeera Rice", name_gu: "જીરા રાઈસ", price: "₹150", qty: "250 gm", img: "https://images.unsplash.com/photo-1603133872594-e5c8965092b1?w=400&q=80" },
+    { name_en: "Veg. Pulao", name_gu: "વેજ પુલાવ", price: "₹140", qty: "300 gm", img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80" },
+    { name_en: "Peas Pulao", name_gu: "મટર પુલાવ", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80" },
+    { name_en: "Kaju Pulao", name_gu: "કાજુ પુલાવ", price: "₹170", qty: "300 gm", img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80" },
+    { name_en: "Veg. Biryani (with raita)", name_gu: "વેજ બિરયાની (રાયતા સાથે)", price: "₹190", qty: "300 gm", img: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&q=80" },
+    { name_en: "Hyderabadi Biryani (with raita)", name_gu: "હૈદરાબાદી બિરયાની (રાયતા સાથે)", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&q=80" },
+    { name_en: "Handi Dum Biryani (with raita)", name_gu: "હાંડી દમ બિરયાની (રાયતા સાથે)", price: "₹199", qty: "300 gm", img: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&q=80" },
+    { name_en: "Kashmiri Pulao (Sweet)", name_gu: "કાશ્મીરી પુલાવ (સ્વીટ)", price: "₹170", qty: "300 gm", img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80" },
   ],
   "Salad & Raita": [
-    { name_en: "Green Salad", name_gu: "ગ્રીન સલાડ", price: "₹75", qty: "200 gm" },
-    { name_en: "Tomato Salad", name_gu: "ટામેટા સલાડ", price: "₹65", qty: "200 gm" },
-    { name_en: "Kachumber Salad", name_gu: "કચુંબર સલાડ", price: "₹65", qty: "200 gm" },
-    { name_en: "Kachumber Salad with Curd", name_gu: "કચુંબર સલાડ વિથ દહીં", price: "₹75", qty: "200 gm" },
-    { name_en: "Veg. Raita", name_gu: "વેજ રાયતા", price: "₹65", qty: "200 gm" },
-    { name_en: "Boondi Raita", name_gu: "બૂંદી રાયતા", price: "₹65", qty: "200 gm" },
-    { name_en: "Pineapple Raita", name_gu: "પાઇનએપલ રાયતા", price: "₹75", qty: "200 gm" },
-    { name_en: "Butter Milk", name_gu: "બટર મિલ્ક", price: "₹35", qty: "200 ml" },
-    { name_en: "Masala Butter Milk", name_gu: "મસાલા બટર મિલ્ક", price: "₹40", qty: "200 ml" },
-    { name_en: "Plain Curd", name_gu: "પ્લેન દહીં", price: "₹40", qty: "100 gm" },
+    { name_en: "Green Salad", name_gu: "ગ્રીન સલાડ", price: "₹75", qty: "200 gm", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80" },
+    { name_en: "Tomato Salad", name_gu: "ટામેટા સલાડ", price: "₹65", qty: "200 gm", img: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=80" },
+    { name_en: "Kachumber Salad", name_gu: "કચુંબર સલાડ", price: "₹65", qty: "200 gm", img: "https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=400&q=80" },
+    { name_en: "Kachumber Salad with Curd", name_gu: "કચુંબર સલાડ વિથ દહીં", price: "₹75", qty: "200 gm", img: "https://images.unsplash.com/photo-1623428454614-abaf00244e52?w=400&q=80" },
+    { name_en: "Veg. Raita", name_gu: "વેજ રાયતા", price: "₹65", qty: "200 gm", img: "https://images.unsplash.com/photo-1631462826683-5f8a1e2c9b25?w=400&q=80" },
+    { name_en: "Boondi Raita", name_gu: "બૂંદી રાયતા", price: "₹65", qty: "200 gm", img: "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?w=400&q=80" },
+    { name_en: "Pineapple Raita", name_gu: "પાઇનએપલ રાયતા", price: "₹75", qty: "200 gm", img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400&q=80" },
+    { name_en: "Butter Milk", name_gu: "બટર મિલ્ક", price: "₹35", qty: "200 ml", img: "https://images.unsplash.com/photo-1623428454614-abaf00244e52?w=400&q=80" },
+    { name_en: "Masala Butter Milk", name_gu: "મસાલા બટર મિલ્ક", price: "₹40", qty: "200 ml", img: "https://images.unsplash.com/photo-1623428454614-abaf00244e52?w=400&q=80" },
+    { name_en: "Plain Curd", name_gu: "પ્લેન દહીં", price: "₹40", qty: "100 gm", img: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80" },
   ],
   "Papad": [
-    { name_en: "Roasted Papad", name_gu: "રોસ્ટેડ પાપડ", price: "₹25", qty: "1 Pcs" },
-    { name_en: "Fry Papad", name_gu: "ફ્રાય પાપડ", price: "₹28", qty: "1 Pcs" },
-    { name_en: "Masala Papad", name_gu: "મસાલા પાપડ", price: "₹40", qty: "1 Pcs" },
-    { name_en: "Sev Masala Papad", name_gu: "સેવ મસાલા પાપડ", price: "₹45", qty: "1 Pcs" },
-    { name_en: "Cheese Masala Papad", name_gu: "ચીઝ મસાલા પાપડ", price: "₹50", qty: "1 Pcs" },
-    { name_en: "Khichiya Masala Papad", name_gu: "ખીચીયા મસાલા પાપડ", price: "₹45", qty: "1 Pcs" },
+    { name_en: "Roasted Papad", name_gu: "રોસ્ટેડ પાપડ", price: "₹25", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=400&q=80" },
+    { name_en: "Fry Papad", name_gu: "ફ્રાય પાપડ", price: "₹28", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=400&q=80" },
+    { name_en: "Masala Papad", name_gu: "મસાલા પાપડ", price: "₹40", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=400&q=80" },
+    { name_en: "Sev Masala Papad", name_gu: "સેવ મસાલા પાપડ", price: "₹45", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=400&q=80" },
+    { name_en: "Cheese Masala Papad", name_gu: "ચીઝ મસાલા પાપડ", price: "₹50", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=400&q=80" },
+    { name_en: "Khichiya Masala Papad", name_gu: "ખીચીયા મસાલા પાપડ", price: "₹45", qty: "1 Pcs", img: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=400&q=80" },
   ],
   "Ice Cream & Dessert": [
-    { name_en: "Vanilla Ice Cream", name_gu: "વેનિલા આઈસક્રીમ", price: "₹50", qty: "100 ml" },
-    { name_en: "Kaju Draksh Ice Cream", name_gu: "કાજુ દ્રાક્ષ આઈસક્રીમ", price: "₹55", qty: "100 ml" },
-    { name_en: "American Nuts Ice Cream", name_gu: "અમેરિકન નટ્સ આઈસક્રીમ", price: "₹55", qty: "100 ml" },
-    { name_en: "Butter Scotch Ice Cream", name_gu: "બટર સ્કોચ આઈસક્રીમ", price: "₹50", qty: "100 ml" },
-    { name_en: "Rajbhog Ice Cream", name_gu: "રાજભોગ આઈસક્રીમ", price: "₹55", qty: "100 ml" },
-    { name_en: "Badam Carnival Ice Cream", name_gu: "બદામ કાર્નિવલ આઈસક્રીમ", price: "₹55", qty: "100 ml" },
-    { name_en: "Gulab Jamun", name_gu: "ગુલાબ જામુન", price: "₹50", qty: "4 Pcs" },
+    { name_en: "Vanilla Ice Cream", name_gu: "વેનિલા આઈસક્રીમ", price: "₹50", qty: "100 ml", img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80" },
+    { name_en: "Kaju Draksh Ice Cream", name_gu: "કાજુ દ્રાક્ષ આઈસક્રીમ", price: "₹55", qty: "100 ml", img: "https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=400&q=80" },
+    { name_en: "American Nuts Ice Cream", name_gu: "અમેરિકન નટ્સ આઈસક્રીમ", price: "₹55", qty: "100 ml", img: "https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=400&q=80" },
+    { name_en: "Butter Scotch Ice Cream", name_gu: "બટર સ્કોચ આઈસક્રીમ", price: "₹50", qty: "100 ml", img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80" },
+    { name_en: "Rajbhog Ice Cream", name_gu: "રાજભોગ આઈસક્રીમ", price: "₹55", qty: "100 ml", img: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&q=80" },
+    { name_en: "Badam Carnival Ice Cream", name_gu: "બદામ કાર્નિવલ આઈસક્રીમ", price: "₹55", qty: "100 ml", img: "https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=400&q=80" },
+    { name_en: "Gulab Jamun", name_gu: "ગુલાબ જામુન", price: "₹50", qty: "4 Pcs", img: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=400&q=80" },
   ],
   "Beverages & Mocktails": [
-    { name_en: "Fresh Lemon Water", name_gu: "ફ્રેશ લેમન વોટર", price: "₹55", qty: "200 ml" },
-    { name_en: "Fresh Lemon Soda", name_gu: "ફ્રેશ લેમન સોડા", price: "₹65", qty: "200 ml" },
-    { name_en: "Mint Mojito", name_gu: "મિન્ટ મોજીતો", price: "₹120", qty: "200 ml" },
-    { name_en: "Blue Lagoon", name_gu: "બ્લુ લગૂન", price: "₹120", qty: "200 ml" },
-    { name_en: "Strawberry Punch", name_gu: "સ્ટ્રોબેરી પંચ", price: "₹120", qty: "200 ml" },
-    { name_en: "Pineapple Blossom", name_gu: "પાઇનએપલ બ્લોસમ", price: "₹130", qty: "200 ml" },
-    { name_en: "Fruit Punch", name_gu: "ફ્રૂટ પંચ", price: "₹130", qty: "200 ml" },
-    { name_en: "Soft Drinks", name_gu: "સોફ્ટ ડ્રિંક્સ", price: "MRP", qty: "—" },
-    { name_en: "Mineral Water", name_gu: "મિનરલ વોટર", price: "MRP", qty: "1 Ltr" },
+    { name_en: "Fresh Lemon Water", name_gu: "ફ્રેશ લેમન વોટર", price: "₹55", qty: "200 ml", img: "https://images.unsplash.com/photo-1523677011781-c91d1bbe4a97?w=400&q=80" },
+    { name_en: "Fresh Lemon Soda", name_gu: "ફ્રેશ લેમન સોડા", price: "₹65", qty: "200 ml", img: "https://images.unsplash.com/photo-1527385352018-3c26dd6c3916?w=400&q=80" },
+    { name_en: "Mint Mojito", name_gu: "મિન્ટ મોજીતો", price: "₹120", qty: "200 ml", img: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=400&q=80" },
+    { name_en: "Blue Lagoon", name_gu: "બ્લુ લગૂન", price: "₹120", qty: "200 ml", img: "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=400&q=80" },
+    { name_en: "Strawberry Punch", name_gu: "સ્ટ્રોબેરી પંચ", price: "₹120", qty: "200 ml", img: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=80" },
+    { name_en: "Pineapple Blossom", name_gu: "પાઇનએપલ બ્લોસમ", price: "₹130", qty: "200 ml", img: "https://images.unsplash.com/photo-1497534446932-c925b458314e?w=400&q=80" },
+    { name_en: "Fruit Punch", name_gu: "ફ્રૂટ પંચ", price: "₹130", qty: "200 ml", img: "https://images.unsplash.com/photo-1497534446932-c925b458314e?w=400&q=80" },
+    { name_en: "Soft Drinks", name_gu: "સોફ્ટ ડ્રિંક્સ", price: "MRP", qty: "—", img: "https://images.unsplash.com/photo-1581006852262-e4307cf6283a?w=400&q=80" },
+    { name_en: "Mineral Water", name_gu: "મિનરલ વોટર", price: "MRP", qty: "1 Ltr", img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80" },
   ],
   "Lassi & Shake": [
-    { name_en: "Sp. Floris Lassi", name_gu: "સ્પે. ફ્લોરિસ લસ્સી", price: "₹100", qty: "200 ml", special: true },
-    { name_en: "Mango Almond Lassi", name_gu: "મેંગો આલ્મન્ડ લસ્સી", price: "₹100", qty: "200 ml" },
-    { name_en: "Plain Lassi", name_gu: "પ્લેન લસ્સી", price: "₹80", qty: "200 ml" },
-    { name_en: "Oreo Cookies Shake", name_gu: "ઓરિયો કૂકીઝ શેક", price: "₹110", qty: "200 ml" },
-    { name_en: "Kit Kat Shake", name_gu: "કિટકેટ શેક", price: "₹110", qty: "200 ml" },
-    { name_en: "Vanilla Milkshake", name_gu: "વેનિલા મિલ્કશેક", price: "₹110", qty: "200 ml" },
-    { name_en: "Chocolate Milkshake", name_gu: "ચોકલેટ મિલ્કશેક", price: "₹110 / ₹130", qty: "200 ml" },
-    { name_en: "Kaju Draksh Milkshake", name_gu: "કાજુ દ્રાક્ષ મિલ્કશેક", price: "₹110 / ₹130", qty: "200 ml" },
-    { name_en: "Badam Carnival Milkshake", name_gu: "બદામ કાર્નિવલ મિલ્કશેક", price: "₹110 / ₹130", qty: "200 ml" },
-    { name_en: "Cold Coffee", name_gu: "કોલ્ડ કોફી", price: "₹90 / ₹100", qty: "200 ml" },
+    { name_en: "Sp. Floris Lassi", name_gu: "સ્પે. ફ્લોરિસ લસ્સી", price: "₹100", qty: "200 ml", special: true, img: "https://images.unsplash.com/photo-1587314168485-3236d6710814?w=400&q=80" },
+    { name_en: "Mango Almond Lassi", name_gu: "મેંગો આલ્મન્ડ લસ્સી", price: "₹100", qty: "200 ml", img: "https://images.unsplash.com/photo-1587314168485-3236d6710814?w=400&q=80" },
+    { name_en: "Plain Lassi", name_gu: "પ્લેન લસ્સી", price: "₹80", qty: "200 ml", img: "https://images.unsplash.com/photo-1587314168485-3236d6710814?w=400&q=80" },
+    { name_en: "Oreo Cookies Shake", name_gu: "ઓરિયો કૂકીઝ શેક", price: "₹110", qty: "200 ml", img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=80" },
+    { name_en: "Kit Kat Shake", name_gu: "કિટકેટ શેક", price: "₹110", qty: "200 ml", img: "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?w=400&q=80" },
+    { name_en: "Vanilla Milkshake", name_gu: "વેનિલા મિલ્કશેક", price: "₹110", qty: "200 ml", img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=80" },
+    { name_en: "Chocolate Milkshake", name_gu: "ચોકલેટ મિલ્કશેક", price: "₹110 / ₹130", qty: "200 ml", img: "https://images.unsplash.com/photo-1579954115545-a95591f28bfc?w=400&q=80" },
+    { name_en: "Kaju Draksh Milkshake", name_gu: "કાજુ દ્રાક્ષ મિલ્કશેક", price: "₹110 / ₹130", qty: "200 ml", img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=80" },
+    { name_en: "Badam Carnival Milkshake", name_gu: "બદામ કાર્નિવલ મિલ્કશેક", price: "₹110 / ₹130", qty: "200 ml", img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=80" },
+    { name_en: "Cold Coffee", name_gu: "કોલ્ડ કોફી", price: "₹90 / ₹100", qty: "200 ml", img: "https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?w=400&q=80" },
   ],
   "Fix Thali & Combos": [
     { name_en: "Fix Punjabi Thali", name_gu: "ફિક્સ પંજાબી થાળી", price: "₹190", qty: "Full Meal", special: false,
-      desc: "Paneer Main Course, Veg. Main Course, Dal Fry, Jeera Rice, Roasted Papad, Butter Milk, 3 Btr. Tandoori / 4 Btr. Chapati, Sweet, Onion / Lemon / Pickle" },
+      desc: "Paneer Main Course, Veg. Main Course, Dal Fry, Jeera Rice, Roasted Papad, Butter Milk, 3 Btr. Tandoori / 4 Btr. Chapati, Sweet, Onion / Lemon / Pickle",
+      img: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400&q=80" },
     { name_en: "Delux Fix Punjabi Thali", name_gu: "ડિલક્સ ફિક્સ પંજાબી થાળી", price: "₹210", qty: "Full Meal",
-      desc: "Tomato Soup + Paneer Main Course, Veg. Main Course, Dal Fry, Jeera Rice, Roasted Papad, Butter Milk, 3 Btr. Tandoori / 4 Btr. Chapati, Sweet, Onion / Lemon / Pickle" },
+      desc: "Tomato Soup + Paneer Main Course, Veg. Main Course, Dal Fry, Jeera Rice, Roasted Papad, Butter Milk, 3 Btr. Tandoori / 4 Btr. Chapati, Sweet, Onion / Lemon / Pickle",
+      img: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400&q=80" },
     { name_en: "Super Delux Fix Punjabi Thali", name_gu: "સુપર ડિલક્સ ફિક્સ પંજાબી થાળી", price: "₹230", qty: "Full Meal", special: true,
-      desc: "Tomato Soup, Veg. Manchurian Dry (3 pcs.), Paneer & Veg. Main Course, Dal Fry, Jeera Rice, Roasted Papad, Butter Milk, Tandoori / Chapati, Sweet, Ice Cream" },
+      desc: "Tomato Soup, Veg. Manchurian Dry (3 pcs.), Paneer & Veg. Main Course, Dal Fry, Jeera Rice, Roasted Papad, Butter Milk, Tandoori / Chapati, Sweet, Ice Cream",
+      img: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400&q=80" },
     { name_en: "Unlimited Lunch / Dinner", name_gu: "અનલિમિટેડ લંચ / ડિનર", price: "₹349", qty: "Min. 3 Person", special: true,
-      desc: "Any One Soup, Green Salad, Veg. Manchurian Dry, Paneer & Veg. Main Course, Dal Fry, Jeera Rice, Roasted Papad, Butter Milk, Tandoori / Chapati, Sweet, Ice Cream (One Time)" },
+      desc: "Any One Soup, Green Salad, Veg. Manchurian Dry, Paneer & Veg. Main Course, Dal Fry, Jeera Rice, Roasted Papad, Butter Milk, Tandoori / Chapati, Sweet, Ice Cream (One Time)",
+      img: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400&q=80" },
   ],
 };
 
@@ -268,32 +272,6 @@ const CATEGORY_ICONS = {
   "Beverages & Mocktails": "🥤",
   "Lassi & Shake": "🥛",
   "Fix Thali & Combos": "🍽️",
-};
-
-// ─── Food image placeholders using unsplash food categories ──────────────────
-const CATEGORY_IMAGES = {
-  "Soup": "https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?w=400&q=80",
-  "Sandwich & Fries": "https://images.unsplash.com/photo-1553909489-cd47e0907980?w=400&q=80",
-  "Chinese Starter": "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&q=80",
-  "Chinese Noodles & Rice": "https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=80",
-  "Tandoor Starter": "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&q=80",
-  "Sizzlers": "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80",
-  "Baked Dish": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80",
-  "Paneer Main Course": "https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80",
-  "Cheese Main Course": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=400&q=80",
-  "Kaju Main Course": "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80",
-  "Kofta Main Course": "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&q=80",
-  "Veg. Main Course": "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=400&q=80",
-  "Dal Mazedar": "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&q=80",
-  "Tandoori Roti": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&q=80",
-  "Tawa Roti": "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400&q=80",
-  "Rice / Pulao / Biryani": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&q=80",
-  "Salad & Raita": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",
-  "Papad": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=400&q=80",
-  "Ice Cream & Dessert": "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&q=80",
-  "Beverages & Mocktails": "https://images.unsplash.com/photo-1497534446932-c925b458314e?w=400&q=80",
-  "Lassi & Shake": "https://images.unsplash.com/photo-1587314168485-3236d6710814?w=400&q=80",
-  "Fix Thali & Combos": "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400&q=80",
 };
 
 const CATEGORIES = Object.keys(MENU_DATA);
@@ -331,10 +309,6 @@ const styles = `
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes shimmer {
-    0% { background-position: -200% center; }
-    100% { background-position: 200% center; }
   }
   @keyframes pulse-glow {
     0%, 100% { box-shadow: 0 0 10px rgba(255,106,0,0.3); }
@@ -439,6 +413,7 @@ const styles = `
     display: flex;
     align-items: stretch;
     position: relative;
+    cursor: pointer;
   }
   .item-card:hover {
     transform: translateY(-3px);
@@ -466,20 +441,6 @@ const styles = `
     .item-img { width: 110px; min-width: 110px; height: 110px; }
   }
   .item-card:hover .item-img { transform: scale(1.07); }
-  .img-placeholder {
-    width: 96px;
-    min-width: 96px;
-    height: 96px;
-    background: linear-gradient(135deg, #1f1f1f, #2a1a0a);
-    border-radius: 0 12px 12px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-  }
-  @media (min-width: 640px) {
-    .img-placeholder { width: 110px; min-width: 110px; height: 110px; }
-  }
 
   /* Veg dot */
   .veg-dot {
@@ -504,21 +465,6 @@ const styles = `
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-  }
-
-  /* Section heading */
-  .section-heading {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section-heading-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(255,106,0,0.3), transparent);
   }
 
   /* Badge */
@@ -562,10 +508,17 @@ const styles = `
     border-radius: 50px;
     font-weight: 500;
   }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--text-dim);
+  }
 `;
 
 // ─── Item Card ────────────────────────────────────────────────────────────────
-function ItemCard({ item, categoryIcon, animDelay = 0 }) {
+function ItemCard({ item, animDelay = 0 }) {
   const [imgError, setImgError] = useState(false);
 
   return (
@@ -612,11 +565,23 @@ function ItemCard({ item, categoryIcon, animDelay = 0 }) {
       {/* Image */}
       <div style={{ position: "relative", overflow: "hidden", borderRadius: "0 16px 16px 0" }}>
         {imgError ? (
-          <div className="img-placeholder">{categoryIcon}</div>
+          <div style={{
+            width: "96px",
+            minWidth: "96px",
+            height: "96px",
+            background: "linear-gradient(135deg, #1f1f1f, #2a1a0a)",
+            borderRadius: "0 12px 12px 0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "28px"
+          }}>
+            {CATEGORY_ICONS[Object.keys(MENU_DATA).find(cat => MENU_DATA[cat].includes(item))] || "🍽️"}
+          </div>
         ) : (
           <img
             className="item-img"
-            src={`https://source.unsplash.com/featured/200x200?${encodeURIComponent(item.name_en.split(" ").slice(0, 2).join("+") + ",food")}`}
+            src={item.img}
             alt={item.name_en}
             loading="lazy"
             onError={() => setImgError(true)}
@@ -627,60 +592,20 @@ function ItemCard({ item, categoryIcon, animDelay = 0 }) {
   );
 }
 
-// ─── Category Section ─────────────────────────────────────────────────────────
-function CategorySection({ category, items }) {
-  const icon = CATEGORY_ICONS[category] || "🍽️";
-  return (
-    <section id={`cat-${category.replace(/\s+/g, "-")}`} style={{ marginBottom: 48 }}>
-      {/* Section Header */}
-      <div className="section-heading">
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 22 }}>{icon}</span>
-          <span style={{
-            fontFamily: "'Cormorant Garamond'",
-            fontSize: 22,
-            fontWeight: 700,
-            color: "#fff",
-            letterSpacing: "-0.3px"
-          }}>
-            {category}
-          </span>
-          <span className="count-badge">{items.length} items</span>
-        </div>
-        <div className="section-heading-line" />
-      </div>
-
-      {/* Grid */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))",
-        gap: 12,
-      }}>
-        {items.map((item, i) => (
-          <ItemCard
-            key={item.name_en}
-            item={item}
-            categoryIcon={icon}
-            animDelay={i * 40}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function FlorisMenu() {
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [scrolled, setScrolled] = useState(false);
   const catNavRef = useRef(null);
-  const sectionRefs = useRef({});
   const activeCatBtnRef = useRef(null);
 
   // Filtered data
   const filteredData = useMemo(() => {
-    if (!searchQuery.trim()) return MENU_DATA;
+    if (!searchQuery.trim()) {
+      // When no search, show only active category
+      return { [activeCategory]: MENU_DATA[activeCategory] };
+    }
+    // When searching, show all matching items
     const q = searchQuery.toLowerCase();
     const result = {};
     Object.entries(MENU_DATA).forEach(([cat, items]) => {
@@ -690,33 +615,9 @@ export default function FlorisMenu() {
       if (filtered.length) result[cat] = filtered;
     });
     return result;
-  }, [searchQuery]);
+  }, [searchQuery, activeCategory]);
 
   const filteredCategories = Object.keys(filteredData);
-
-  // Scroll spy
-  useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const id = entry.target.id.replace("cat-", "").replace(/-/g, " ");
-            const match = CATEGORIES.find(c => c.replace(/\s+/g, " ") === id.replace(/-/g, " "));
-            if (match) setActiveCategory(match);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: "-80px 0px -60% 0px" }
-    );
-    Object.values(sectionRefs.current).forEach(el => el && observer.observe(el));
-    return () => observer.disconnect();
-  }, [filteredData]);
 
   // Scroll active cat button into view
   useEffect(() => {
@@ -730,14 +631,9 @@ export default function FlorisMenu() {
     }
   }, [activeCategory]);
 
-  const scrollToCategory = (cat) => {
+  const handleCategoryClick = (cat) => {
     setActiveCategory(cat);
-    const el = document.getElementById(`cat-${cat.replace(/\s+/g, "-")}`);
-    if (el) {
-      const offset = 68;
-      const top = el.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top, behavior: "smooth" });
-    }
+    setSearchQuery(""); // Clear search when changing category
   };
 
   const totalItems = Object.values(MENU_DATA).flat().length;
@@ -800,12 +696,12 @@ export default function FlorisMenu() {
         {/* Category Nav */}
         <div className="cat-nav" ref={catNavRef}>
           <div className="cat-nav-inner">
-            {filteredCategories.map(cat => (
+            {CATEGORIES.map(cat => (
               <button
                 key={cat}
                 ref={cat === activeCategory ? activeCatBtnRef : null}
                 className={`cat-btn${cat === activeCategory ? " active" : ""}`}
-                onClick={() => scrollToCategory(cat)}
+                onClick={() => handleCategoryClick(cat)}
               >
                 <span style={{ fontSize: 16 }}>{CATEGORY_ICONS[cat] || "🍽️"}</span>
                 <span>{cat}</span>
@@ -817,20 +713,51 @@ export default function FlorisMenu() {
         {/* Menu Content */}
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "32px 16px 80px" }}>
           {filteredCategories.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "80px 0", color: "var(--text-dim)" }}>
+            <div className="empty-state">
               <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
               <div style={{ fontSize: 18, fontFamily: "'Cormorant Garamond'", color: "var(--text-muted)" }}>No dishes found</div>
               <div style={{ fontSize: 13, marginTop: 8 }}>Try a different keyword</div>
             </div>
           ) : (
             filteredCategories.map(cat => (
-              <div
-                key={cat}
-                ref={el => (sectionRefs.current[cat] = el)}
-                id={`cat-${cat.replace(/\s+/g, "-")}`}
-              >
-                <CategorySection category={cat} items={filteredData[cat]} />
-              </div>
+              <section key={cat}>
+                {/* Section Header - only show when searching */}
+                {searchQuery && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20,
+                    paddingBottom: 14, borderBottom: "1px solid var(--border)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{ fontSize: 22 }}>{CATEGORY_ICONS[cat] || "🍽️"}</span>
+                      <span style={{
+                        fontFamily: "'Cormorant Garamond'",
+                        fontSize: 22,
+                        fontWeight: 700,
+                        color: "#fff",
+                        letterSpacing: "-0.3px"
+                      }}>
+                        {cat}
+                      </span>
+                      <span className="count-badge">{filteredData[cat].length} items</span>
+                    </div>
+                    <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(255,106,0,0.3), transparent)" }} />
+                  </div>
+                )}
+
+                {/* Grid */}
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))",
+                  gap: 12,
+                  marginBottom: searchQuery ? 48 : 0
+                }}>
+                  {filteredData[cat].map((item, i) => (
+                    <ItemCard
+                      key={item.name_en}
+                      item={item}
+                      animDelay={i * 40}
+                    />
+                  ))}
+                </div>
+              </section>
             ))
           )}
         </div>
