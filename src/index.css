@@ -1,6 +1,25 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
 
+/* src/index.css — add at the top, before @tailwind directives */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  min-height: 100dvh;
+}
+
+/* Fallback for older browsers */
+@supports not (min-height: 100dvh) {
+  html, body {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Prevent any element from causing horizontal overflow */
+* {
+  max-width: 100vw;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -288,4 +307,23 @@ body {
   width: 24px; height: 1.5px;
   background: var(--accent);
   transition: all 0.3s ease;
+}
+
+/* Mobile viewport fix */
+@supports (height: 100dvh) {
+  .min-h-screen {
+    min-height: 100dvh;
+  }
+}
+
+/* Prevent horizontal overflow causing black bars */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Ensure images cover properly on mobile */
+img {
+  max-width: 100%;
+  height: auto;
 }
