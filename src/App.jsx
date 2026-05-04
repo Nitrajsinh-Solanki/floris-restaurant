@@ -61,7 +61,7 @@ function ScrollToTop() {
 // ─── App ──────────────────────────────────────────────────────────────────────
 function App() {
   return (
-    <div className="min-h-screen bg-black overflow-x-hidden">
+    <div className="min-h-[100dvh] bg-black overflow-x-hidden">
       <Navbar />
       <main>
         <section id="home">

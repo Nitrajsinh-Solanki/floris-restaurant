@@ -1,5 +1,5 @@
 // src/components/Navbar.jsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // ─── Smooth scroll helper ─────────────────────────────────────────────────────
 const scrollTo = (id) => {
@@ -7,17 +7,17 @@ const scrollTo = (id) => {
 };
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled]           = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection]     = useState('home'); // Issue #4
+  const [activeSection, setActiveSection] = useState('home');
 
-  // ─── navLinks — Gallery added (Issue #2) ───────────────────────────────────
+  // ─── Updated navLinks order ─────────────────────────────────────────────────
   const navLinks = [
     { name: 'Home',    href: 'home'    },
-    { name: 'Menu',    href: 'menu'    },
     { name: 'About',   href: 'about'   },
     { name: 'Banquet', href: 'banquet' },
-    { name: 'Gallery', href: 'gallery' }, // ← was missing
+    { name: 'Menu',    href: 'menu'    },
+    { name: 'Gallery', href: 'gallery' },
     { name: 'Contact', href: 'contact' },
   ];
 
@@ -28,33 +28,38 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // ─── Active section via IntersectionObserver (Issue #4) ───────────────────
+  // ─── Active section via IntersectionObserver ─────────────────────────────────
   useEffect(() => {
-    const sectionIds = navLinks.map(l => l.href);
-    const observers  = [];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.4, rootMargin: "-20% 0px -20% 0px" }
+    );
 
-    sectionIds.forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveSection(id);
-        },
-        { threshold: 0.35 }
-      );
-      obs.observe(el);
-      observers.push(obs);
+    navLinks.forEach((link) => {
+      const el = document.getElementById(link.href);
+      if (el) observer.observe(el);
     });
 
-    return () => observers.forEach(o => o.disconnect());
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    return () => observer.disconnect();
+  }, [navLinks]);
 
-  // ─── Mobile link click: close menu then scroll (Issue #5) ─────────────────
+  // ─── Mobile link click: close menu, set active section, then scroll ─────────
   const handleMobileLink = (id) => {
+    setActiveSection(id);
     setIsMobileMenuOpen(false);
-    // Small delay so close animation doesn't fight the scroll
     setTimeout(() => scrollTo(id), 320);
+  };
+
+  // ─── Desktop link click: set active section and scroll ────────────────────
+  const handleDesktopLink = (id) => {
+    setActiveSection(id);
+    scrollTo(id);
   };
 
   return (
@@ -66,11 +71,11 @@ const Navbar = () => {
       }`}
     >
       <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Navbar Row */}
         <div className="flex items-center justify-between h-16 sm:h-20 lg:h-24">
-
           {/* Logo */}
           <button
-            onClick={() => scrollTo('home')}
+            onClick={() => handleDesktopLink('home')}
             className="flex items-center group cursor-pointer flex-shrink-0 min-w-0 bg-transparent border-0"
           >
             <div className="relative">
@@ -96,14 +101,13 @@ const Navbar = () => {
               return (
                 <button
                   key={link.href}
-                  onClick={() => scrollTo(link.href)}
+                  onClick={() => handleDesktopLink(link.href)}
                   className={`relative px-2 xl:px-4 py-2 font-medium text-sm xl:text-base
                              hover:text-orange-300 transition-all duration-300 group whitespace-nowrap
                              bg-transparent border-0 cursor-pointer
                              ${isActive ? 'text-orange-300' : 'text-white'}`}
                 >
                   <span className="relative z-10">{link.name}</span>
-
                   {/* Active / hover underline */}
                   <span
                     className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5
@@ -112,7 +116,6 @@ const Navbar = () => {
                                transition-all duration-500
                                ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`}
                   />
-
                   {/* Hover glow */}
                   <span className="absolute inset-0 bg-gradient-to-r from-orange-600/0 to-orange-300/0
                                    group-hover:from-orange-600/10 group-hover:to-orange-300/10
@@ -122,10 +125,10 @@ const Navbar = () => {
             })}
           </div>
 
-          {/* CTA — Book a Table (Issue #3: was a non-functional button) */}
+          {/* CTA — Book a Table */}
           <div className="hidden lg:block flex-shrink-0">
             <button
-              onClick={() => scrollTo('contact')}
+              onClick={() => handleDesktopLink('contact')}
               className="relative group px-4 xl:px-8 py-2.5 xl:py-3
                          bg-gradient-to-r from-orange-600 to-orange-300
                          text-black font-bold text-sm xl:text-base rounded-full
@@ -140,11 +143,11 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile hamburger - Now at the top-right corner */}
           <button
             onClick={() => setIsMobileMenuOpen(prev => !prev)}
             className="lg:hidden relative w-10 h-10 flex items-center justify-center
-                       text-white hover:text-orange-300 transition-colors duration-300 flex-shrink-0"
+                       text-white hover:text-orange-300 transition-colors duration-300 flex-shrink-0 z-50"
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMobileMenuOpen}
           >
@@ -158,40 +161,39 @@ const Navbar = () => {
             </div>
           </button>
         </div>
-      </div>
 
-      {/* Mobile Menu */}
-      <div
-        className={`lg:hidden overflow-hidden transition-all duration-500 ${
-          isMobileMenuOpen ? 'max-h-screen' : 'max-h-0'
-        }`}
-      >
-        <div className="bg-black/98 backdrop-blur-xl border-t border-white/5 px-6 py-6 space-y-4">
-          {navLinks.map((link) => {
-            const isActive = activeSection === link.href;
-            return (
-              <button
-                key={link.href}
-                onClick={() => handleMobileLink(link.href)}
-                className={`block w-full text-left py-3 font-medium text-lg bg-transparent border-0 cursor-pointer
-                           transition-colors duration-300 border-b border-white/5 last:border-0
-                           ${isActive ? 'text-orange-300' : 'text-white hover:text-orange-300'}`}
-              >
-                {link.name}
-              </button>
-            );
-          })}
+        {/* Mobile Menu - Now absolutely positioned and hidden when closed */}
+        <div
+          className={`lg:hidden absolute top-full left-0 right-0 z-40 overflow-hidden transition-all duration-500 ${
+            isMobileMenuOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
+          }`}
+        >
+          <div className="px-6 py-4 bg-black/90 backdrop-blur-xl border-t border-white/5">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href;
+              return (
+                <button
+                  key={link.href}
+                  onClick={() => handleMobileLink(link.href)}
+                  className={`block w-full text-left py-3 font-medium text-lg bg-transparent border-0 cursor-pointer
+                             transition-colors duration-300 border-b border-white/5 last:border-0
+                             ${isActive ? 'text-orange-300' : 'text-white hover:text-orange-300'}`}
+                >
+                  {link.name}
+                </button>
+              );
+            })}
 
-          {/* Mobile Book a Table (Issue #3) */}
-          <button
-            onClick={() => handleMobileLink('contact')}
-            className="w-full mt-6 px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-300
-                       text-black font-bold text-base rounded-full
-                       shadow-[0_0_25px_rgba(255,106,0,0.4)]
-                       active:scale-95 transition-transform duration-300 cursor-pointer border-0"
-          >
-            BOOK A TABLE
-          </button>
+            <button
+              onClick={() => handleMobileLink('contact')}
+              className="w-full mt-6 px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-300
+                         text-black font-bold text-base rounded-full
+                         shadow-[0_0_25px_rgba(255,106,0,0.4)]
+                         active:scale-95 transition-transform duration-300 cursor-pointer border-0"
+            >
+              BOOK A TABLE
+            </button>
+          </div>
         </div>
       </div>
     </nav>
