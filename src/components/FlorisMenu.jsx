@@ -341,6 +341,7 @@ const styles = `
     padding: 10px 16px;
     width: max-content;
     min-width: 100%;
+    max-width: 100vw;
   }
   .cat-btn {
     display: flex;
